@@ -1,2 +1,8 @@
 This is my first file in master branch to learn branching.
+<<<<<<< HEAD
 First update in master branch
+=======
+Updating in feature branch 
+
+another update in feature branch
+>>>>>>> feature
