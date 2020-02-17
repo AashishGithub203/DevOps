@@ -1,9 +1,5 @@
 file for demo of conflict
 tanya is adding a feature in conf file.
 Again atnya is adding an update.
-<<<<<<< HEAD
 Hey i m here
-=======
 Anshu is removing the bug and adding some feature.
-
->>>>>>> 788c4102410d003bf82400b9cf9aeb487f03c517
