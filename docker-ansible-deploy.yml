@@ -1,0 +1,30 @@
+
+---
+- name: deployment via Ansible through docker container
+  hosts: all
+  become: true
+  tasks:
+    - name: stop container                            
+      shell: docker container stop mywebapp-container            # stopping the containers where would be running previously
+
+    - name: remove container                          
+      shell: docker container rm -f mywebapp-container                     # removing the stoped containers
+
+    - name: remove docker image                       
+      shell: docker image rmi -f MyDocHub/mywebapp1               # removing the old images
+      
+    - name: create a new container
+      shell: docker run -it -d --name mywebapp-container -p 9000:80 MyDocHub/mywebapp1 
+
+# mywebapp would be the name of the job and that's why the value of $JOB_NAME would become mywebapp1 and so when docker run command 
+# would run then it will fetch the mywebapp1:latest image from docker hub and container would be started with mywebapp-container name
+# in next commit the existing container needs to be removed that's why we are stoping/removing mywebapp-container before running again.
+
+# Dockerfile, Inventary file, playbook file and src should be in same location in github.
+# whenever the developer commit the changes, Jenkins server pull the changes and started the pipeline job
+# at first jenkins pull the src from github and prepare a build and generate a .war/.jar file in target folder under /jenkins/workspace/
+# after that image will be build using docker file where .war file from target folder will be moved to container
+# in next step the newly created image will be pushed to dockerhub
+# finally Ansible will run the image and deploy the application in preoduction server.
+
+
