@@ -1,0 +1,25 @@
+# docker swarm : Its a service within docker which allows us to create and manage multiple containeers deployed 
+# across multiple host machines.
+# docker compose : Running multiple containers as a single service with the help of docker-compose yaml file.
+
+
+version: "2.0"
+services:
+  web:
+    image: apache:latest
+    volume:
+    - /home/ubuntu/myvol1
+    ports:
+    - 8080:80
+  db:
+    image: mysql:latest
+    volume:
+    - /home/ubuntu/myvol1
+    ports:
+    - 9090:90
+
+# docker-compose up                       [started the service]
+# docker-compose ps
+# docker ps
+# docker-compose down                     [stopping the service]
+# docker-compose up --scale db=2          [db will be scaled to 2, so 2 would be running now for database mysql]
