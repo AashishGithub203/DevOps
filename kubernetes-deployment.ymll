@@ -1,0 +1,49 @@
+---
+apiVersion: v1
+kind: Deployment
+metadata:
+  name: myweb1
+  labels:
+    app: nginx
+spec:
+  replicas: 4
+  selector:
+    matchlevels:
+      app: nginx
+template:
+  metadata:
+    labels: 
+      app: nginx
+  spec:
+    containers:
+    - name: webserer1
+      image: nginx
+      ports:
+      - containerPort: 80
+    - name: dabaseserver1
+      image: mysql
+      ports:
+      - containerPorts: 3030
+  
+---
+apiVersion: v1
+kind: service
+metadata:
+  name: my_service
+  labels:
+    app: nginx
+spec:
+  type: NodePort
+  ports:
+  - port: 80
+    targetPort: 8080
+    protocol: TCP
+    nodePort: 30021
+  selector:
+    app: nginx
+
+
+# Service.ylm file can be included into the same deployment file that will also work
+# if service is inckuded into the same deployment 
+# file just kubectl create -f mykubernetes_deployment1.yml is enough to run the cluster.
+# no need to run kubectl create -f mykubernetes_service1.yml seperately
