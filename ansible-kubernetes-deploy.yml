@@ -1,0 +1,17 @@
+---
+- name: depoye through kubernetes
+  hosts: all
+  become: true
+  tasks:
+  - name: delete old deployment
+    shell: kubectl delete delpoyment mykubernetes_deployment
+
+  - name: delete old service
+    shell: kubectl delete service mykubernetes_service
+
+  - name: create a deployment
+    shell: kubectl apply -f mykubernetes_deployment1.yml
+
+  - name: create a service for deployment
+    shell: kubectl apply -f mykubernetes_service1.yml
+
