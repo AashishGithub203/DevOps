@@ -1,0 +1,33 @@
+//Scripted Pipeline
+
+node{
+
+    stage("Git Clone"){
+        git credentialsId: 'My_Git_CRED', url: 'https://github.com/ValaxyTech/sparkjava-war-example.git'
+    }
+
+    stage("maven Build"){
+        def mavenHome = toolName: "maven-3.6.1", type: "maven"
+        def $mavenCMD = "${mavenHome}/bin/mvn clean package"
+        sh "${mavenCMD}"
+    }
+
+    stage("Build Docker Image"){
+        sh "docker build -t $JOB_NAME:v1.$BUILD_ID ."
+    }
+
+    stage("Docker Push"){
+        withCredentials([string(credentiald: 'MyHubPasswd', variable: 'MyHubPasswd')]){   //we can get this from pipeline script generator
+            sh "docker login -u MyDocHub -p ${MyHubPasswd}"     //we can't expose password to everyone so need to pass the password variable
+        }
+        sh "docker tag $JOB_NAME:v1.$BUILD_ID MyDocHub/$JOB_NAME:v1.$BUILD_ID"
+        sh "docker tag $JOB_NAME:v1.$BUILD_ID MyDocHub/$JOB_NAME:latest"
+        sh "docker image push MyDocHub/$JOB_NAME:v1.$BUILD_ID"
+        sh "docker image push MyDocHub/$HON_NAME:latest"
+        sh "docker image rmi $JOB_NAME:v1.$BUILD_ID MyDocHub/$JON_NAME:v1.$BUILD_ID MyDocHub/$JON_NAME:latest"
+    }
+
+    stage("Deploy the application through Ansible"){
+        ansibleplaybook credentialsId: 'AnsibleServer', disableHostkeyChecking: true, installation: 'ansible', inventory: 'myInv.inv', playbook: 'deployDockerAnsible.yml'
+    }
+}
