@@ -1,0 +1,40 @@
+version: "3.8"
+services:
+  web:
+    image: nginx
+    ports: 
+      - 80:80
+    deploy:
+      mode: replicated
+      replicas: 3
+      restart_policy: 
+        condition: on-failure
+
+  database:
+    image: mysql
+    ports:
+      - 90:90
+    deploy:
+      mode: replicated
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+
+# vim docker-stack.yml     // save and exit
+# docker stack deploy -c docker-stack.yml myweb1
+# docker service ls
+# docker stack services myweb1
+# docker stack ls   // it will show two service - webser1 and dbser2
+# docker service ps webser1   // it will show that 3 replicas of nginx is running 
+# docker service ps dbser2    // it will show that 2 replicas of mysql is running
+
+# using docker-compose file
+# vim docker-compose.yml
+# docker stack deploy --compose-file docker-compose.yml myweb2
+# If your configuration is split between multiple Compose files, you can provide multiple --compose-file flags.
+# docker stack deploy --compose-file docker-compose.yml -c docker-compose.prod.yml myweb2
+# docker service ls
+
+
+
+
